@@ -42,7 +42,8 @@ while True:
 			i -= 1
 		
 	except KeyboardInterrupt:
-		GPIO.output(LED0, GPIO.LOW)
+		for LED in LEDs:
+			GPIO.output(LED, GPIO.LOW)
 		break
 
 GPIO.cleanup()
