@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="Home">
+    <meta name="author" content="Kolton Benoit">
+    <link rel="icon" href="">
+
+    <title>Lab 2</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Polytech Pi Labs</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="../index.html">Home</a></li>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    
+    <div class="container theme-showcase" role="main">
+
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <h1>Lab 2: </h1>
+        <h2>Test the HAT</h2>
+		
+        <h3>Information</h3>
+        TN 255's Raspberry Pi labs used to use a breadboard and individual components. This lead to many mistakes, time lost, and damaged components. The [INSERT HAT NAME HERE] HAT was developed in an independent study to solve these problems. These labs were also written to accompany the HAT. Trust me, you don't want to copy/paste python from a Word document into an SSH session...</br></br>
+        
+        HAT: <b>H</b>ardware <b>A</b>ttached on <b>T</b>op! The [INSERT HAT NAME HERE] HAT is called a HAT because it follows the Raspberry Pi Foundation's <a href="https://github.com/raspberrypi/hats">HAT</a> standard. This is important, beacause add-on boards aren't supposed to be called HATs if they don't follow the standard. The standard specifies shape, pinout, and power. It even allows for an EEPROM to auto configure GPIO and device tree information!</br></br>
+        
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Discrepancy Warning</h3>
+            </div>
+            <div class="panel-body">
+                The labs were developed with a prototype of the [INSERT HAT NAME HERE] HAT, so pictures may look a little different from your HAT.
+            </div>
+        </div>
+        
+        <h3>HAT Layout</h3>
+		Take a few moments to familiarize yourself with the HAT and its components:
+        <img class="center-block" src="../images/2/layout.1.jpg">
+        <ol>
+            <li>Main headers</li>
+			<li>Power breakout headers</li>
+			<li>I2C breakout headers</li>
+			<li>1Wire breakout header</li>
+			<li>UART breakout headers</li>
+			<li>SPI breakout headers</li>
+			<li>Tactile buttons</li>
+			<li>LEDs</li>
+			<li>Shift register chain headers</li>
+			<li>Shift register</li>
+			<li>Seven segment display</li>
+			<li>ID EEPROM (see the <a href="https://github.com/raspberrypi/hats">HAT</a> standard.)</li>
+        </ol>
+		</br>		
+		
+        <h3>Instructions</h3>
+        <ol>
+			<li>Download the <code>test.py</code> file from the Resources section below. Save it to a place you can find later, such as the desktop.</li>
+            <img src="../images/2/1.jpg">
+            <li>If it isn't already, attach your HAT to your Pi</li>
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Warning!</h3>
+                </div>
+                <div class="panel-body">
+                    The fit between the 40 pins and sockets will be quite tight, so be gentle! Bent pins can be annoying to fix!
+                </div>
+            </div>
+			<li>Open the terminal by clicking the shortcut on the menu bar or by pressing <kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>t</kbd></li>
+            <img src="../images/2/3.jpg">
+            <li>Change to the directory where you saved your file by typing <code>cd </code> followed by the path to the target directory and 
+            press <kbd>enter⏎</kbd>.</br> <!--The ⏎ is the carriage return symbol, if your text editor doesn't render it correctly-->
+            
+			For example, <code>cd ~/Desktop</code> will change to the Desktop directory.</li>
+			<li>Run the test script by typing <code>python test.py</code> and press <kbd>enter⏎</kbd>. Follow the directions given by the test script. Watch the HAT and make sure all components respond correctly.</li>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Hint</h3>
+                </div>
+                <div class="panel-body">
+                    Linux (and other Unix-like operating systems) is case sensitive. This means that <code>desktop</code> and <code>Desktop</code> (note the captial <code>D</code>) are different things!</br></br>
+                    Linux (and other Unix-like operating systems) use <code>/</code> as a file path seperator, whereas Windows uses <code>\</code>. So your paths need to be formatted like <code>./path/to/your/file</code>.
+            </div>
+            </div>
+            <img src="../images/2/5.jpg">
+            </br>
+			<div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Success!</h3>
+                    </div>
+                    <div class="panel-body">
+                        If all the LEDs lit, all the buttons responded, and the 7 segment display showed the numbers 0 through 9 correctly (with and without the <code>.</code>) you've completed this lab! Move onto the next lab!
+                    </div>
+                </div>
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Failure!</h3>
+                    </div>
+                    <div class="panel-body">
+                        If one of the components didn't work correctly, make sure the header is properly aligned and is pressed all the way down, then rerun the test.</br></br>
+                        If the component still doesn't work correctly, ask your instructor or lab assistant for assistance. They'll help troubleshoot the problem, set the board aside for repairs, and give you a replacement (assuming there's any available; follow their instructions, I'm just a web page).
+                    </div>
+                </div>
+        </ol>
+        
+        </br></br>
+        <h3>Resources</h3>
+        Download these files to your Raspberry Pi:
+        <ol>
+            <li><a href="/2/test.py"><code>test.py</code></a></li>
+        </ol>
+      </div>
+      
+    </div> <!-- /container -->
+
+  </body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="Home">
+    <meta name="author" content="Kolton Benoit">
+    <link rel="icon" href="">
+
+    <title>Lab 3</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	
+	<!--highlight.js for code highlighting-->
+	<link rel="stylesheet" href="/styles/ir-black.css">
+	<script src="/highlight.pack.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Polytech Pi Labs</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="../index.html">Home</a></li>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    
+    <div class="container theme-showcase" role="main">
+
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <h1>Lab 3: </h1>
+        <h2>GPIO Input and Output</h2>
+        
+        <!--http://getbootstrap.com/components/#panels
+			http://v4-alpha.getbootstrap.com/content/code/ -->
+        
+        <h3>Information</h3>
+        The Raspberry Pi 2 has 40 pins and each has different (and multiple) functions available. This makes it rather difficult to remember what does what. Luckily for you, I've put some thought into these labs: open <a href="https://pinout.xyz">pinout.xyz</a> in another tab and look at the labels for each pin. Compare it to your Pi (make sure you have your pi oriented correctly).
+        <h3>Schematic</h3>
+        The schematic for the HAT is fairly simple, as far as electrical schematics go. Here's a crash course in the symbols and the functional sections of each part of the schematic:
+        <ol>
+            <li>These are the two common symbols used to represent a resistor. The resistance value (in Ohms(Ω)) and the resistor number (format R#) is often written with it.</li>
+            <img src="../images/3/sch.1.png"></br></br>
+            <li>This is a Light Emitting Diode (LED). The side the big arrow points to (the right side in this diagram) is the cathode (negative) leg and the other side is the anode (positive) leg. This is important because LEDs (diodes in general) only conduct electricity in one direction. Reversing it may lead to the magic smoke escaping! Remove the two small arrows on the bottom and it represents a normal diode.</li>
+            <img src="../images/3/sch.2.png"></br></br>
+            <li>This a switch. The physical pin numbers are labeled.</li>
+            <img src="../images/3/sch.3.png"></br></br>
+            <li>These symbols are often used to represent voltage supplies and sinks. They don't actually represent a magical source of electricity; they just denote that all lines that connect to one of those symbols are electrically connected. Logical connections like these are used to tiddy up schematics, so that it is easier to understand what's going on. The supplies (the arrows) here are marked with the voltage they supply. The voltages are 5 and 3.3 volts. Notice that 3.3 is written as <code>3V3</code> instead of <code>3.3V</code>. This is to make it harder to miss the <code>.</code> and mistake <code>3.3V</code> for <code>33V</code>. If it wasn't obvious, feeding 33 volts to a PI <i>will</i> release the magic smoke and destroy it!</li>
+            <img src="../images/3/sch.4.png"></br></br>
+            <li>This is the main header for the board that connects the HAT to the Pi. Note that its pinout is identical to that found on <a href="https://pinout.xyz">pinout.xyz</a>. The numbers are the physical pin number. The labels on each of the green lines work in a similar manner to that of the suppies above: lines with the same label are connected, even if the schematic doesn't actually show it.</li>
+            <img src="../images/3/sch.5.png"></br></br>
+            <li>These are all the other headers on the HAT. They're here to make it slightly easier to connect an external device to the Pi.</li>
+            <img src="../images/3/sch.6.png"></br></br>
+            <li>These are the 8 LEDs and their associated resistors. Note that the PI's pin supplies each LED with current when it is turned on.</li>
+            <img src="../images/3/sch.7.png"></br></br>
+            <li>This one is a little more complex: it is the button circuitry. The 10KΩ resistor "pulls up" the line to 3.3 volts.  If the button is pressed, the line is connected to ground and the voltage drops. The PI reads the voltage on the line and If the voltage is <code>HIGH</code> (around 3.3v), the PI knows the button is not pressed. If the voltage is <code>LOW</code> (around 0v) the PI knows that the button was pressed. Debounce (discussed later) is handled in software, but could also have been implemented in hardware by using a capacitor.</li>
+            <img src="../images/3/sch.8.png"></br></br>
+            <li>This is the shift register and seven segment display. The shift register is the rectangle on the left. The numbers are the physical pin numbers (starting from the pin left of the notch in the packaging of the chip). Note that the schematic doesn't have them in order. This is to make the schematic a little easier to read and to represent more than one style of IC (integrated circuit) packaging, which may not be in an easy-to-understand layout. And yes, the confusing layout of IC pins <i>does</i> make wire/trace routing a nightmare. Luckily for you, I already did the hard part.</br></br>
+            
+			The rectangle on the right with the "8" in it is the seven segment display, if that wasn't obvious. It works in a similar maner as the LEDs above, but is in a different package. It is also labeled with the pyhsical pin number. Some of the pins are labeled from <code>a</code> to <code>g</code>, which represent which segment of the display they connect to, starting from the top segment and moving in a clock-wise order, looping all the way back to the top and ending with <code>g</code> in the middle. <code>DP</code> is the Decimal Point.</br></br>
+            
+			The header is for chaining shift registers together, which is discussed in the next lab.</li>
+            <img src="../images/3/sch.9.png"></br></br>
+            <li>This part of the schematic is only included for completeness as it currently isn't used in any of the labs. Your HAT probably does not even have those pads populated (see the ID EPPROM in the physical layout below). They are part of the system used by the <a href="https://github.com/raspberrypi/hats">HAT</a> standard for autoconfiguration. It was part of the template used to create the board and was left on; leaving it unpopulated costs no more than deleting it from the board. Maybe you can use it in the future for some neat project?</li>
+            <img src="../images/3/sch.10.png"></br></br>
+        </ol>
+        
+        <h3>Physical HAT Layout</h3>
+		Now, compare the logical schematic with the physical HAT</br>
+        <img src="../images/3/layout.1.jpg">
+        <ol>
+            <li>Main headers</li>
+			<li>Power breakout headers</li>
+			<li>I2C breakout headers</li>
+			<li>1Wire breakout header</li>
+			<li>UART breakout headers</li>
+			<li>SPI breakout headers</li>
+			<li>Tactile buttons</li>
+			<li>LEDs</li>
+			<li>Shift register chain headers</li>
+			<li>Shift register</li>
+			<li>Seven segment display</li>
+			<li>ID EEPROM (see the <a href="https://github.com/raspberrypi/hats">HAT</a> standard.)</li>
+        </ol>
+        Now, here's a picture of the HAT in breadboard form. Note that it is electrically identical to the HAT, but is much larger. Aren't you glad I did the hard work for you?</br>
+        <img src="../images/3/layout.2.jpg"></br></br>
+        <b>Q:</b> "Why do I have to read all of this?" </br>
+		<b>A:</b> Because I'll have to write all this documentation for the HAT anyway, so I might as well make it easy to read... and force you to acknowledge how much work has gone into making this HAT and labs. That, and, it <i>is</i> useful information. I also think a slightly snarky set of labs is much more interesting to read than the old boring labs this is replacing.</br>
+        <h3>Instructions</h3>
+        <ol>
+            <li>Download <code>blink.py</code> from the Resources section below. Save it to a location you can find in the next step, such as <code>Desktop</code>.</li>
+			<li>Open the terminal by using the shortcut on the menu bar or by pressing <kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>t</kbd>.</li>
+			<img src="../images/3/2.jpg">
+			<li>Change to the directory where you saved your file by typing <code>cd </code> followed by the path to the target directory and 
+            press <kbd>enter⏎</kbd>.</br> <!--The ⏎ is the carriage return symbol, if your text editor doesn't render it correctly-->
+            
+			For example, <code>cd ~/Desktop</code> will change to the Desktop directory.</li>
+			<li>Run <code>blink.py</code> by typing <code>sudo python blink.py</code> and hit <kbd>enter⏎</kbd></li>
+			<li><code>LED0</code> should now be blinking on and off.</li>
+			<li>Exit the program by pressing <kbd>ctrl</kbd>+<kbd>c</kbd>.</li>
+			<li>Understanding the code: You've made <code>LED0</code> blink on and off, but how does this work?</li>
+			<div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Hint</h3>
+                </div>
+                <div class="panel-body">
+                    This subsection will have you open the code and will explain all of it, so don't worry if you don't have any programming experience.
+				</div>
+			</div>
+			<ol>
+				<li>In the terminal, open <code>blink.py</code> by entering <code>nano blink.py</code>. This will open the file in the next editor <code>nano</code>, an easy to use command line text editor. Note that your mouse isn't very useful in the terminal, so don't bother using it. Use the arrow keys instead.</li>
+				<img src="../images/3/7.1.png">
+				<li>Read through the code line by line:</li>
+				<ul>
+					<li>The first line is used to select which interpreter is used to execute your code, so you don't actually need to use <code>sudo python blink.py</code> to run it, you could use <code>sudo ./blink.py</code> if the file permissions are set correctly. It isn't always required, but it is good practice to make sure the system knows what interpreter to use.</li>
+                    <pre><code class="python">#!/usr/bin/python</code></pre>
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<h3 class="panel-title">Info</h3>
+						</div>
+						<div class="panel-body">
+							Python is what is called an "<a href="https://en.wikipedia.org/wiki/Interpreted_language">interpreted</a>" programming language. This (normally) means that there is another program that <i>interpretes</i> the code and executes it directly, unlike a "<a href="https://en.wikipedia.org/wiki/Compiled_language">compiled</a>" language like <code>C</code>, which needs to be <i>compiled</i> into machine code before it can be executed.</br></br>
+							
+							There are upsides and downsides to an interpreted language:</br>
+							One upside: the programs can be executed on other platforms (for example, x86 vs. ARM) without changes.</br>
+							One downside: the program execution won't be executed as quickly as a compiled language, because it is interpreted in real time.</br></br>
+							Compiled languages don't have to be interpeted in real time and can do various optimizations to increase execution speed, but must be recompiled to run on other platforms.
+						</div>
+					</div>
+					<li>Lines preceded by a <code>#</code> are comments; they aren't executed as commands. They are there so the programmer can write notes to identify the source code, explain what the code does, etc. These labs will mostly skip comments, unless they have important information. Feel free to read them, or don't. I'm just a web page.</li>
+                    <pre><code class="python">#This is a comment!</code></pre>
+					<li>The line below imports the <code>sleep</code> method from the <code>time</code> module. <code>sleep</code> is used to pause code execution for a given amount of time.</li>
+                    <pre><code class="python">from time import sleep</code></pre>
+                    <li>This line imports the GPIO module. It will be called later as <code>GPIO</code>. It is used to control the PI's <b>G</b>eneral <b>P</b>urpose <b>I</b>nput/<b>O</b>uput pins.</li>
+                    <pre><code class="python">import RPi.GPIO as GPIO</code></pre>
+                    <li>This line tells <code>GPIO</code> that the pin numbers passed to it represent the BCM (Broadcom) numbers and not the physical pin numbers. You could use <code>GPIO.BOARD</code> instead of <code>GPIO.BCM</code> to refer to the physical pin numbers. See <a href="https://pinout.xyz">pinout.xyz</a>.</li>
+                    <pre><code class="python">GPIO.setmode(GPIO.BCM)</code></pre>
+                    <li>Declares a variable and store <code>13</code> in it. Variables are used to store data and can be used in functions and equations. <code>13</code> is the BCM number of the HAT's <code>LED0</code> is connected to. Refer to the schematic and look at the guide on <a href="https://pinout.xyz">pinout.xyz</a>, then figure out which physical pin BCM 13 is.</li>
+                    <pre><code class="python">LED0 = 13</code></pre>
+                    <li>Tells GPIO to allocate <code>LED0</code> (the variable) and configure it as an output. Remember that <code>LED0</code> currently contains <code>13</code>.</li>
+                    <pre><code class="python">GPIO.setup(LED0, GPIO.OUT)</code></pre>
+                    <li>Tells GPIO to set <code>LED0</code> <code>LOW</code>, or in other words, turn BCM pin 13 off. To turn the pin on, replace <code>GPIO.LOW</code> with <code>GPIO.HIGH</code>.</li> 
+                    <pre><code class="python">GPIO.output(LED0, GPIO.LOW)</code></pre>
+                    <li>The next few lines are the first (and last) major structure of the code. It starts a <code>while</code> loop, with the condition of <code>True</code>, meaning it will always loop and not stop. Loops allow a programmer to instruct the computer to execute an arbitrary amount of code for a number of times or until a certain condition occurs. Normally, the <code>while</code> loop will loop until the condition evaluates to <code>False</code>, but since the condition in this loop is <code>True</code>, it wil loop indefinitely! This is useful when you want it to happen, but sometimes an infinite loop occurs due to a programmer's mistake.</li>
+                    <li>The next lines are indented with <kbd>tab⇆</kbd> (python requires tabs). This is how python knows the following code is in the loop and not outside. Further indentations are used for nesting of loops or other code structures.</li>
+                    <li>The next line, <code>try:</code> is the start of a <code>try... except</code> (sometimes called a <code>try... catch</code>) block. Inside the <code>try:</code>, code is executed, but if an exception (an error) occurs, the code in the <code>except</code> block is executed. This is how the <code>while True:</code> loop is exited: remember when step 6. had you type <kbd>ctrl</kbd>+<kbd>c</kbd>? This generates a <code>KeyboardInterrupt</code> exception and the code in the <code>except</code> block is then executed. Multiple <code>except</code> blocks can be used to catch and react to multiple exceptions. An <code>except</code> block can also catch spesific exceptions by adding the exception's name to the <code>except</code> declaration, as is done below.</li>
+                    <li>The code inside of the <code>try:</code> section of the block is what actually turns the LED on and off. Read the code and see if you've learned from the above information!</li>
+                    <li>The last line in this section is <code>break</code>. It is what actually breaks out of the loop; execution returns to outside the loop.</li>
+                    <!--The spacing here is broken due to how the <pre> block needs preformated lines. It is annoying. It is easier than using multiple <pre> tags.-->
+                    <pre><code class="python">while True:
+    try:
+        GPIO.output(LED0, GPIO.HIGH)
+        sleep(0.5)
+        GPIO.output(LED0, GPIO.LOW)
+        sleep(0.5)
+		
+    except KeyboardInterrupt:
+        GPIO.output(LED0, GPIO.LOW)
+        break</code></pre>
+                    <li>The very last line in the script tells <code>GPIO</code> to deallocate all pins. This is important because if a pin isn't deallocated correctly, another program might not be able to use it. Allocation tries to lock the pin to the current program, so other programs don't try to use it. When you ran <code>blink.py</code>, the console may have given a warning that the pin wasn't deallocated correctly the last time it was used, but it would ignore the warning.</li>
+                    <pre><code class="python">GPIO.cleanup()</code></pre>
+				</ul>
+                <li>You should now understand how <code>blink.py</code> works. Try editing the code. Save your code by typing <kbd>ctrl</kbd>+<kbd>x</kbd> followed by <kbd>y</kbd> to accept changes, then run it with <code>sudo python blink.py</code>. Don't be afraid of making a mistake. As a programmer, you <b>will</b> make mistakes! Try to do the following:</li>
+                <ul>
+                    <li>Change how long the LED is on</li>
+                    <li>Change how long the LED is off</li>
+                    <li>The HAT has 8 LEDs: change which LED is on (hint: read the schematic)</li>
+                    <li>Turn <i>multiple</i> LEDs on.</li>
+                </ul>
+			</ol>
+			<li>Download the next code example, <code>leds.py</code>, but use the command line this time by entering <code>wget </code>, followed by this websites's hostname, and <code>/3/leds.py</code></br>
+            For example, <code>wget pilabs.example.com/3/leds.py</code> (note that these labs were written before a host name was selected, so that might be wrong.). <code>wget</code> is a command line utility that will go to the address given and download whatever is there. It is useful when you don't have a web browser or a GUI to use one!</li>
+            <li>Run <code>leds.py</code> and see what it does. Exit it with <kbd>ctrl</kbd>+<kbd>c</kbd> when you're ready for the next step.</li>
+            <li>Open <code>leds.py</code> in <code>nano</code></br>
+            Understanding the code:</li>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Hint</h3>
+                </div>
+                <div class="panel-body">
+                    A significant amount of code will be the same, so only the different parts will be addressed.
+				</div>
+			</div>
+            <ul>
+                <li>This line declares and initalizes an array. Arrays are like variables, but they hold more than one value. Think of it as a list of variables all, named one name, but each element accessed individually. The elements in this array can be accessed in various ways, which will be explained when it occurs.</li>
+                <li>The numbers in this array might look familar to you: they are the BCM numbers of <code>LED0</code> to <code>LED7</code></li>
+                <pre><code class="python">LEDs = [13, 12, 19, 6, 5, 25, 24, 23]</code></pre>
+                <li>This is a <code>for</code> loop (sometimes called a <code>foreach</code> loop in other languages). It is one of the ways the elements of the array <code>LEDs</code> are accessed. It takes each element, one at a time, and puts it in a temporary variable called <code>LED</code>, then the code inside can use it. This <code>for</code> loop is allocating all of the pins represented by <code>LEDs</code> and making sure they are turned off.</li>
+                <pre><code class="python">for LED in LEDs:
+    GPIO.setup(LED, GPIO.OUT)
+    GPIO.output(LED, GPIO.LOW)</code></pre>
+                <li>This lonely little line declares a counter variable, which will be important for our inner loops that are explained next.</li>
+                <pre><code class="python">i = 0</code></pre>
+                <li>This is one of the nested loops: a loop within another loop.</li>
+                <li>Look at the condition for the loop: <code>i < 7</code>. It will take the current value of <code>i</code> and compare it to <code>7</code>. If it is less than <code>7</code>, it evaluates to <code>True</code>. If it is <i>equal</i> to or greater than <code>7</code>, it evaluates to <code>False</code>. If it evaluates to <code>True</code>, the loop's code is executed, if it is <code>False</code>, it is skipped and execution continues on.</li>
+                <li>Look at the body of the <code>while</code> loop. The body turns the current LED represented by <code>i</code> off, turns the next LED (represented by adding <code>1</code> to <code>i</code>) on, waits for 1/10th of a second, adds <code>1</code> to <code>i</code> and assigns the result back to <code>i</code>.</li>
+                <li>The current LED's pin number is accessed from the array <code>LEDs</code> by putting the index value in <code>[]</code>. </li>
+                <li><b>Important:</b> python arrays are "0 indexed", meaning the index starts at <code>0</code> and goes up to 1 less than the total number of items in the array. Trying to access an index outside of that range results in an <code>IndexError</code> exception, a common error made by <strike>new</strike> <i>all</i> programmers. Notice how the while loop won't run if <code>i</code> is equal to <code>7</code>. This is because, in the body of the loop, statement <code>GPIO.output(LEDs[i + 1], GPIO.HIGH)</code> adds <code>1</code> to <code>i</code>. If <code>i</code> were to ever contain <code>7</code>, this statement would attempt to access index <code>8</code>, which is an error! This is often known as an "off-by-one" error.</li>
+                <li><b>Important:</b> the last line of the loop adds <code>1</code> to <code>i</code>. Forgetting to add to a counter in a "counter-controlled" loop is a common cause of accidental infinite loops! </li>
+                <pre><code class="python">while i < 7:
+    #Turn the current LED off
+    GPIO.output(LEDs[i], GPIO.LOW)
+    #Turn the next LED on
+    GPIO.output(LEDs[i + 1], GPIO.HIGH)
+    sleep(0.1)
+    #Increment the counter
+    i += 1</code></pre>
+                <li>The next inner loop is similar to the last one. The difference is that it only loops if the value in <code>i</code> is <i>greater than</i> <code>0</code>.</li>
+                <li><b>Important:</b>The last line subtracts <code>1</code> from <code>i</code>. Adding to a counter in a counter controlled loop when your loop's condition expects it to be substracted from is a common cause of accidental infinite loops! For example, if <code>1</code> had been <i>added</i> to <code>i</code>, <code>i</code> would never<a href="http://mortada.net/can-integer-operations-overflow-in-python.html">*</a> be less than <code>0</code>!</li>
+                <pre><code class="python">while i > 0 :
+    #Turn the current LED off
+    GPIO.output(LEDs[i], GPIO.LOW)
+    #Turn the next LED on
+    GPIO.output(LEDs[i - 1], GPIO.HIGH)
+    sleep(0.1)
+    #Decrement the counter
+    i -= 1</code></pre>
+            </ul>
+            <li>You should now understand how <code>leds.py</code> works. Try editing the code to do the following:</li>
+            <ul>
+                <li>Make the LEDs turn on and off slower.</li>
+                <li>Make the LEDs turn on and off <i>faster</i>.</li>
+                <li>Reverse the order the LEDs turn on/off in.</li>
+                <li>Reverse the order the LEDs turn on/off in, <i>with the orginal loops!</i></li>
+                <li>Turn every other LED on/off.</li>
+            </ul>
+            <!--GPIO INPUT after here. Maybe move to a seperate lab?-->
+            <li>The previous two examples are useful examples of output. But, what about <i>input</i>? The next example, <code>button.py</code>, will use the tactile buttons, if it wasn't obvious from the name. Download <code>buttons.py</code> from the Resources section or use <code>wget</code> with the same address as last time, but change <code>leds.py</code> to <code>button.py</code>.</li>
+            <li>Run <code>button.py</code> and follow the instructions given by the program. When you're ready for the next section, close the program and open it in <code>nano</code></br>
+            Understanding the code: </li>
+            <ul>
+                <li>This example is similar to the <code>leds.py</code> example, where the BCM pin numbers are stored in an array, an array called <code>buttons</code>, in this case.</li>
+                <li>The allocation is also similar to the allocation for the LEDs done in <code>leds.py</code>, but the pins are set as <code>GPIO.IN</code> instead of <code>GPIO.OUT</code>. This instructs <code>GPIO</code> to use the pin as an input. Any of the GPIO pins can be used for either <b>I</b>nput or <b>O</b>utput for any <b>G</b>eneral <b>P</b>urpose, be it for powering LEDs, reading input from switches, actuating relays, activating transistors, and much more.</li>
+                <pre><code class="python">for button in buttons:
+    GPIO.setup(button, GPIO.IN)</code></pre>
+                <li>This inner loop is a similar counter-controlled loop as was used in <code>leds.py</code>.</li>
+                <li>The second line shown below is an <code>if</code> statement, which checks if a condition is <code>True</code> and will execute code inside if it is. The <code>if:</code> block can be followed by a <code>else:</code> block (in a similar structure as the <code>try...except</code> block) to execute code if the condition is <code>False</code>. You have already learned about these conditions; they're identical to those used in <code>while</code> loops, but only executed once. This <code>if</code> statement checks to see if the code is not (<code>!=</code>) <code>LOW</code></li>
+                <li>The next line has a compound statement; <code>str.format()</code> is executed before <code>print()</code>. <code>str.format()</code> takes a string and will format it according to a <a href="https://docs.python.org/3.4/library/string.html">set of rules</a>. In this case, it replaces <code>{0}</code> with the first argument in the following arguments, in this case teh variable <code>i</code>. <code>str.format()</code> then returns that formatted string to <code>print()</code>, which will output the given string to the console.</li>
+                <li>Debouncing will be discussed below.</li>
+                <li>The counter variable is incremented by <code>1</code> at the end of the loop and is reset to <code>0</code> before the outter loop (not shown here) runs again.</li>
+                <pre><code class="python">while i < 4
+    if GPIO.input(buttons[i]) != GPIO.LOW:
+        print(str.format("You pressed button {0}!", i))
+        #Debounce
+        time.sleep(0.01)
+    i += 1
+i = 0</code></pre>
+                <li>"Debouncing" a switch is preventing a single button press being interpreted as more than one. Since computers are <i>absurdly</i> faster than humans, this is a very important step to accepting input. To see its importance, comment out <code>time.sleep(0.01)</code> by placing a <code>#</code> in front of it and rerun <code>button.py</code>. You'll see that a single button press is sometimes read as many more than one.</li>
+                <li>The time delay gives the user enough time to release the button, so that they don't perform any extra actions.</li>
+                <li>Debouncing can also be implemented using a capacitor (hardware debouncing), but that adds costs to devices and is inflexible. Software debouncing (what the HAT these labs are designed for uses) uses is more flexible (you can tune how long a button press should be considered multiple) on a whim, where hardware debouncing would require soldering on a different capacitor. However, software debouncing requires spending time waiting that could have otherwise been spent doing work; it slows down a program (unless you use <a href="https://en.wikipedia.org/wiki/Thread_(computing)#Multithreading">multiple threads</a>).</li>
+                <pre><code class="python">#Debounce
+time.sleep(0.01)</code></pre>
+                <li>You should now understand how <code>button.py</code> works. Try to do the following:</li>
+                <ul>
+                    <li>Turn an LED on</li>
+                    <li>Turn an LED off</li>
+                    <li>Toggle an LED on or off</li>
+                </ul>
+            </ul>
+        </ol>
+        </br>
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title">Lab Finished!</h3>
+            </div>
+            <div class="panel-body">
+                You've completed this lab! Move onto the next one!
+            </div>
+        </div>
+        
+        <h3>Resources</h3>
+        Download these files to your Raspberry Pi:
+        <ol>
+            <li><a href="/3/blink.py"><code>blink.py</code></a></li><!--Blink an LED on and off-->
+            <li><a href="/3/leds.py"><code>leds.py</code></a></li><!--Blink multiple LEDs with a loop-->
+            <li><a href="/3/button.py"><code>button.py</code></a></li><!--Button input-->
+        </ol>
+      </div>
+      
+    </div> <!-- /container -->
+
+  </body>
+</html>
