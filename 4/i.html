@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="Home">
+    <meta name="author" content="Kolton Benoit">
+    <link rel="icon" href="">
+
+    <title>Lab 4</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <!--highlight.js for code highlighting-->
+	<link rel="stylesheet" href="/styles/ir-black.css">
+	<script src="/highlight.pack.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Polytech Pi Labs</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="../index.html">Home</a></li>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    
+    <div class="container theme-showcase" role="main">
+
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <h1>Lab 4: </h1>
+        <h2>Using a shift register</h2>
+        
+        <h3>Information</h3>
+        In the last lab, you used the Raspberry Pi's General Purpose Input/Output pins for both input and output. For input, your code checked to see if any of 4 buttons were pressed. For output, your code turned on up to 8 LEDs. Each of these buttons and LEDs are connected to an individual GPIO pin. However, direct connections like this are actually an inefficient method of connecting devices to the Pi. Why? Look at this pin diagram from <a href="https://pinout.xyz">pinout.xyz</a>:
+        <img src="https://pinout.xyz/resources/raspberry-pi-pinout.png">
+        Some of these pins have special functions that others do not have:
+        <ul>
+            <li><a href="https://en.wikipedia.org/wiki/Universal_asynchronous_receiver/transmitter">UART</a></li>
+            <ul>
+                <li>Universal Asynchronous Receiver/Transmitter. The old school way of communicating to other devices. With the right adapter, it can connect to RS-232 devices that can either access the PI's console or allow the PI to access the console of, say, a Cisco switch.</li>
+                <li>BCM 14 is the UART Tx line</li>
+                <li>BCM 15 is the UART Rx line</li>
+            </ul>
+            <li><a href="https://en.wikipedia.org/wiki/I%C2%B2C">I²C</a></li>
+            <ul>
+                <li>Inter-Intergrated Circuit, which is supposed to be written as I²C, but is often written as I2C since super scripts are too hard. The abbrivation is actually pronounced as "I-squared-C" so don't call it "I-two-C" if you don't want to be made fun of behind your back! The PI has two I²C channels 0 and 1.</li>
+                <li>BCM 2 is the Serial Data line (SDA) for channel 1</li>
+                <li>BCM 3 is the Serial Clock line (SCL) for channel 1</li>
+                <li>BCM 0 is the Serial Data line (SDA) for channel 0</li>
+                <li>BCM 1 is the Serial Clock line (SCL) for channel 0</li>
+                <li><i>Note:</i> The HAT breaks out the I²C channel 1 lines, but the channel 0 lines are connected to the EEPROM chip below the buttons, next to the camera slot.</li>
+            </ul>
+            <li><a href="https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus">SPI</a></li>
+            <ul>
+                <li>Serial Peripheral Interface. The PI has two SPI channels 0 and 1, but you have to chose your own chip select pin for channel 1.</li>
+                <li>BCM 10 is the Master Out Slave In (MOSI) line for channel 0</li>
+                <li>BCM 9 is the Master In Slave Out (MISO) line for channel 0</li>
+                <li>BCM 10 is the Serial Clock (SCLK) line for channel 0</li>
+                <li>BCM 8 is the Chip Enable 0 (CE0) line for channel 0</li>
+                <li>BCM 7 is the Chip Enable 1 (CE1) line for channel 0</li>
+                <li>BCM 20 is the Master Out Slave In (MOSI) line for channel 1</li>
+                <li>BCM 19 is the Master In Slave Out (MISO) line for channel 1</li>
+                <li>BCM 21 is the Serial Clock (SCLK) line for channel 1</li>
+                <li><i>Note:</i> Can use another GPIO pin as another Chip Enable pin, but your code has to be written a little differently.</li>
+                <li><i>Note:</i> The HAT only breaks out the channel 0 pins. Channel 1 MOSI is used for Switch 2, Channel 1 SCLK is used for Switch 3, and Channel 1 MISO is used for LED2.</li>
+            </ul>
+            <li><a href="https://en.wikipedia.org/wiki/1-Wire">1-Wire</a></li>
+            <ul>
+                <li>The 1-Wire interface uses 1 wire for communication, if that wasn't obvious.</li>
+                <li>BCM 4 is the Data line.</li>
+            </ul>
+        </ul>
+        
+        The HAT was designed to breakout these special connections so that <i>someone</i> (hint, hint) could more easily use them to extend the functionality of the HAT and build a neat project. These special lines can also be used as normal GPIO pins, but access to that special feature is lost. Because we're saving those pins for their special use, there aren't a lot of options to add more functionality to the HAT. So, how many pins do we still have to work with? We know that the PI 2 (and newer) has 40 pins. Let's count the specialized pins, pins for the LEDs, pins for the buttons, pins for power and ground:
+        <ul>
+            <li>8 LEDs</li>
+            <li>4 Buttons</li>
+            <li>2 UART lines</li>
+            <li>4 I²C lines (2 channels)</li>
+            <li>5 SPI lines (channel 0 only, remember that the channel 1 pins were used for buttons or LEDs)</li>
+            <li>1 1-Wire line</li>
+            <li>2 5 volt power lines</li>
+            <li>2 3.3 volt power lines</li>
+            <li>8 Ground lines</li>
+        </ul>
+        So, do some fifth grade math and figure out how many pins are left. Alright, fine, <a href="http://lmgtfy.com/?q=40+-+(8%2B4%2B2%2B4%2B5%2B1%2B2%2B2%2B8)">I'll do it for you</a>: there are 4 pins available.</br></br>
+        
+        Now, look at your HAT. Look at the 7 segment display. How many LEDs in the display are there? 8: the 7 segments of the digit and the decimal point. We only have 4 pins to drive 8 LEDs. How would we accomplish this? We use a shift register!</br></br>
+        
+        <i>What's a shift register?</i></br>
+        It is a register that you shift bits into!</br></br>
+        
+        Alright, fine a more detailed explanation: a shift register is an integrated circuit that allows a microcontroller or other device to expand input or output by reading or writing data in serial. They outputting data one bit at a time, storing it in a register, and shifting the values in the register over.</br></br>
+        
+        The HAT uses a <code>74HC595N</code> shift register, the black package next to the seven segment display. It requires at least 3 lines to drive: <code>data</code>, <code>clock</code>, and <code>latch</code>. There are an optional 2 lines that can be used: <code>output enable</code> and <code>clear register</code>. If these aren't used, tie <code>output enable</code> to ground and <code>clear register</code> to 5v. It can be daisy chained to more shift registers, allowing for an arbitrary number of extra pins. The HAT doesn't use the two optional lines, since we only have 4 pins available and it would be more complicated to program. Review the schematic for the 7 segment display functional area of the HAT:
+        <img src="../images/4/sch.1.png"></br>
+        
+        <h3>Instructions</h3>
+        <ol>
+            
+        </ol>
+        
+        <h3>Resources</h3>
+        Download these files to your Raspberry Pi:
+        <ol>
+            <li><a href=""></a></li>
+        </ol>
+      </div>
+      
+    </div> <!-- /container -->
+
+  </body>
+</html>
