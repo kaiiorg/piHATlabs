@@ -25,14 +25,11 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-<<<<<<< HEAD
     
     <!--highlight.js for code highlighting-->
 	<link rel="stylesheet" href="/styles/ir-black.css">
 	<script src="/highlight.pack.js"></script>
 	<script>hljs.initHighlightingOnLoad();</script>
-=======
->>>>>>> 46844fe660f808282b350d18ebdd0490178c4408
   </head>
 
   <body>
@@ -61,7 +58,6 @@
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
         <h1>Lab 4: </h1>
-<<<<<<< HEAD
         <h2>Using a shift register</h2>
         
         <h3>Information</h3>
@@ -131,23 +127,199 @@
         
         <h3>Instructions</h3>
         <ol>
-            
-=======
-        <h2 class="lead">Using a shift register</h2>
-        There isn't anything interesting here yet...
-        
-        <h3>Information</h3>
-        
-        <h3>Instructions</h3>
-        <ol>
-            <li></li>
->>>>>>> 46844fe660f808282b350d18ebdd0490178c4408
+            <li>Download the <code>7seg.py</code> code from the Resources section. Run it and use <kbd>ctrl</kbd>+<kbd>c</kbd> when you're ready for the next step.</li>
+            <li>Open the code in <code>nano</code> to analyze it.</li> 
+            <ul>
+                <li>The shift register only needs 3 pins: <code>data</code>, <code>clock</code>, and <code>latch</code>. We'll use BCM 17 for <code>data</code>, BCM 27 for <code>clock</code>, and BCM 22 for <code>latch</code>.</li>
+                <pre><code class="python">#Pins for shift register
+dataPin = 17
+clockPin = 27
+latchPin = 22</code></pre>
+                <li>Next is an array full of hexidecimal values. We use this so that we can just call <code>segments[]</code> to display a certain digit on the 7 segment display and not need to remember what bits need to be shifted out to the register.</li>
+                <li>But, how do we know which values will display which character? Simple: the schematic and binary. Take a look at the schematic again, specifically the following part:</li>
+                <img src="../images/4/sch.2.png">
+                <li>According to the schematic above, the following pins on the shift register map to the LEDs in the seven segment display:</li>
+                <table class ="table table-bordered" style="width:100%">
+                    <tr>
+                        <td><b>Shift register pin</b></td>
+                        <td>QA</td>
+                        <td>QB</td>
+                        <td>QC</td>
+                        <td>QD</td>
+                        <td>QE</td>
+                        <td>QF</td>
+                        <td>QG</td>
+                        <td>QH</td>
+                    </tr>
+                    <tr>
+                        <td><b>Segment</b></td>
+                        <td>a</td>
+                        <td>b</td>
+                        <td>c</td>
+                        <td>d</td>
+                        <td>e</td>
+                        <td>f</td>
+                        <td>g</td>
+                        <td>DP</td>
+                    </tr>
+                </table>
+                <li>With the above chart, we know which shift register pins we need to turn on to turn on a given display segment. Next, we need to know which <i>segments</i> we need to turn on to show the digit we want. To do that, let's work out how to display the character <code>0</code>. We'll use <code>0</code> to represent <code>OFF</code> and <code>1</code> to represent <code>ON</code>:</li>
+                <table class ="table table-bordered" style="width:100%">
+                    <tr>
+                        <th rowspan="3"><img src="../images/4/sch.3.png"></th>
+                        <td><b>Shift register pin</b></td>
+                        <td>QA</td>
+                        <td>QB</td>
+                        <td>QC</td>
+                        <td>QD</td>
+                        <td>QE</td>
+                        <td>QF</td>
+                        <td>QG</td>
+                        <td>QH</td>
+                    </tr>
+                    <tr>
+                        <td><b>Segment</b></td>
+                        <td>a</td>
+                        <td>b</td>
+                        <td>c</td>
+                        <td>d</td>
+                        <td>e</td>
+                        <td>f</td>
+                        <td>g</td>
+                        <td>DP</td>
+                    </tr>
+                    <tr>
+                        <td><b>Is On:</b></td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                </table>
+                <li>Now we know what the binary value is that represents the <code>0</code> character, but binary is a little inconvenient to type and is easy to make a mistake, so let's convert it to decimal. To convert binary to decimal, we take the decimal value of each binary position and add the values of positions with a <code>1</code>:</li>
+                <table class ="table table-bordered" style="width:100%">
+                    <tr>
+                        <th rowspan="4"><img src="../images/4/sch.3.png"></th>
+                        <td><b>Shift register pin</b></td>
+                        <td>QA</td>
+                        <td>QB</td>
+                        <td>QC</td>
+                        <td>QD</td>
+                        <td>QE</td>
+                        <td>QF</td>
+                        <td>QG</td>
+                        <td>QH</td>
+                    </tr>
+                    <tr>
+                        <td><b>Segment</b></td>
+                        <td>a</td>
+                        <td>b</td>
+                        <td>c</td>
+                        <td>d</td>
+                        <td>e</td>
+                        <td>f</td>
+                        <td>g</td>
+                        <td>DP</td>
+                    </tr>
+                    <tr>
+                        <td><b>Is On:</b></td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td><b>Decimal value: (add if bold)</b></td>
+                        <td><b>128</b></td>
+                        <td><b>64</b></td>
+                        <td><b>32</b></td>
+                        <td><b>16</b></td>
+                        <td><b>8</b></td>
+                        <td><b>4</b></td>
+                        <td>2</td>
+                        <td>1</td>
+                    </tr>
+                </table>
+                <li>So, what's 128+64+32+16+8+4? <a href="http://lmgtfy.com/?q=128%2B64%2B32%2B16%2B8%2B4">252</a>!</li>
+                <li>Decimal is great and all, but sometimes even decimal numbers start to get out of hand, so let's convert our binary number into a hexidecimal number by using the following chart:</li>
+                <table class ="table table-bordered" style="width:100%">
+                    <tr>
+                        <td><b>Binary</b></td>
+                        <td>0000</td>
+                        <td>0001</td>
+                        <td>0010</td>
+                        <td>0011</td>
+                        <td>0100</td>
+                        <td>0101</td>
+                        <td>0110</td>
+                        <td>0111</td>
+                        <td>1000</td>
+                        <td>1001</td>
+                        <td>1010</td>
+                        <td>1011</td>
+                        <td>1100</td>
+                        <td>1101</td>
+                        <td>1110</td>
+                        <td>1111</td>
+                    </tr>
+                    <tr>
+                        <td><b>Hexidecimal</b></td>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>7</td>
+                        <td>8</td>
+                        <td>9</td>
+                        <td>A</td>
+                        <td>B</td>
+                        <td>C</td>
+                        <td>D</td>
+                        <td>E</td>
+                        <td>F</td>
+                    </tr>
+                </table>
+                <table class ="table table-bordered" style="width:100%">
+                    <tr>
+                        <td><b>Binary value to change:</b></td>
+                        <td>1111</td>
+                        <td>1100</td>
+                    </tr>
+                    <tr>
+                        <td><b>Hexidecimal value:</b></td>
+                        <td>F</td>
+                        <td>C</td>
+                    </tr>
+                    <tr>
+                        <td><b>Full hexidecimal value:</b></td>
+                        <td>0xFC</td>
+                    </tr>
+                </table>
+                <li>Now we have the hexidecimal value of <code>FC</code>, but we'll want to write it as <code>0xFC</code>. The <code>0x</code> makes sure that we don't mistake a hexidecimal value for a decimal value.</li>
+                <li>Now, look at your code, at the first value in the array created:</li>
+                <pre><code class="python">segments = [0xFC, 0x60, 0xDA, 0xF2, 0x66, 0xB6, 0x3E, 0xE0, 0xFE, 0xF6]</code></pre>
+                <li>See the <code>0xFC</code>? Looks familar, doesn't it? Try doing the process we just did to find out what the rest of the values will display.</li>
+                <pre><code class="python"></code></pre>
+                <li></li>
+                <pre><code class="python"></code></pre>
+            </ul>
         </ol>
         
         <h3>Resources</h3>
         Download these files to your Raspberry Pi:
         <ol>
-            <li><a href=""></a></li>
+            <li><a href="../4/7seg.py">7seg.py</a></li>
         </ol>
       </div>
       
