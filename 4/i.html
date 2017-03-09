@@ -73,7 +73,7 @@
             </ul>
             <li><a href="https://en.wikipedia.org/wiki/I%C2%B2C">I²C</a></li>
             <ul>
-                <li>Inter-Intergrated Circuit, which is supposed to be written as I²C, but is often written as I2C since super scripts are too hard. The abbrivation is actually pronounced as "I-squared-C" so don't call it "I-two-C" if you don't want to be made fun of behind your back! The PI has two I²C channels 0 and 1.</li>
+                <li>Inter-Intergrated Circuit, which is supposed to be written as I²C, but is often written as I2C since super scripts are too hard. The abbrivation is actually pronounced as "I-squared-C" so don't call it "I-two-C" if you don't want to be made fun of behind your back! The PI has two I²C channels (0 and 1).</li>
                 <li>BCM 2 is the Serial Data line (SDA) for channel 1</li>
                 <li>BCM 3 is the Serial Clock line (SCL) for channel 1</li>
                 <li>BCM 0 is the Serial Data line (SDA) for channel 0</li>
@@ -82,7 +82,7 @@
             </ul>
             <li><a href="https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus">SPI</a></li>
             <ul>
-                <li>Serial Peripheral Interface. The PI has two SPI channels 0 and 1, but you have to chose your own chip select pin for channel 1.</li>
+                <li>Serial Peripheral Interface. The PI has two SPI channels (0 and 1), but you have to chose your own chip select pin for channel 1.</li>
                 <li>BCM 10 is the Master Out Slave In (MOSI) line for channel 0</li>
                 <li>BCM 9 is the Master In Slave Out (MISO) line for channel 0</li>
                 <li>BCM 10 is the Serial Clock (SCLK) line for channel 0</li>
@@ -120,7 +120,7 @@
         <i>What's a shift register?</i></br>
         It is a register that you shift bits into!</br></br>
         
-        Alright, fine a more detailed explanation: a shift register is an integrated circuit that allows a microcontroller or other device to expand input or output by reading or writing data in serial. They outputting data one bit at a time, storing it in a register, and shifting the values in the register over.</br></br>
+        Alright, fine a more detailed explanation: a shift register is an integrated circuit that allows a microcontroller or other device to expand input or output by reading or writing data in serial. They take data one bit at a time, store it in a register, and shift the existing values over over.</br></br>
         
         The HAT uses a <code>74HC595N</code> shift register, the black package next to the seven segment display. It requires at least 3 lines to drive: <code>data</code>, <code>clock</code>, and <code>latch</code>. There are an optional 2 lines that can be used: <code>output enable</code> and <code>clear register</code>. If these aren't used, tie <code>output enable</code> to ground and <code>clear register</code> to 5v. It can be daisy chained to more shift registers, allowing for an arbitrary number of extra pins. The HAT doesn't use the two optional lines, since we only have 4 pins available and it would be more complicated to program. Review the schematic for the 7 segment display functional area of the HAT:
         <img src="../images/4/sch.1.png"></br>
@@ -129,6 +129,7 @@
         <ol>
             <li>Download the <code>7seg.py</code> code from the Resources section. Run it and use <kbd>ctrl</kbd>+<kbd>c</kbd> when you're ready for the next step.</li>
             <li>Open the code in <code>nano</code> to analyze it.</li> 
+			<li>Understanding the code:</li>
             <ul>
                 <li>The shift register only needs 3 pins: <code>data</code>, <code>clock</code>, and <code>latch</code>. We'll use BCM 17 for <code>data</code>, BCM 27 for <code>clock</code>, and BCM 22 for <code>latch</code>.</li>
                 <pre><code class="python">#Pins for shift register
@@ -136,7 +137,7 @@ dataPin = 17
 clockPin = 27
 latchPin = 22</code></pre>
                 <li>Next is an array full of hexidecimal values. We use this so that we can just call <code>segments[]</code> to display a certain digit on the 7 segment display and not need to remember what bits need to be shifted out to the register.</li>
-                <li>But, how do we know which values will display which character? Simple: the schematic and binary. Take a look at the schematic again, specifically the following part:</li>
+                <li>But, how do we know which values will display which character? Simple: the schematic and binary. This is the relevant part of the schematic:</li>
                 <img src="../images/4/sch.2.png">
                 <li>According to the schematic above, the following pins on the shift register map to the LEDs in the seven segment display:</li>
                 <table class ="table table-bordered" style="width:100%">
@@ -200,7 +201,25 @@ latchPin = 22</code></pre>
                         <td>0</td>
                     </tr>
                 </table>
-                <li>Now we know what the binary value is that represents the <code>0</code> character, but binary is a little inconvenient to type and is easy to make a mistake, so let's convert it to decimal. To convert binary to decimal, we take the decimal value of each binary position and add the values of positions with a <code>1</code>:</li>
+                <li>Now we know what the binary value is that represents the <code>0</code> character, but binary is a little inconvenient to type and is easy to make a mistake, so let's convert it to decimal. To convert binary to decimal, we take the decimal value of each binary position and add the values of positions with a <code>1</code>.</li></br>
+				
+				<div class="panel panel-info">
+					<div class="panel-heading">
+						<h3 class="panel-title">Information</h3>
+					</div>
+					<div class="panel-body">
+						The lowest value bit is the one all the way to the right and is thus called the <b>L</b>east <b>S</b>ignificant <b>B</b>it (LSB). The highest value bit is the one all the way to the left and is thus called hte The lowest value bit is the one all the way to the right and is thus called the <b>M</b>ost <b>S</b>ignificant <b>B</b>it (MSB).
+					</div>
+				</div>
+				<div class="panel panel-info">
+					<div class="panel-heading">
+						<h3 class="panel-title">Information</h3>
+					</div>
+					<div class="panel-body">
+						Since we're using a <a href="https://en.wikipedia.org/wiki/Radix#In_numeral_systems">Base-2</a> system, each position's  value is worth 2x as much as the last, where in decimal (Base-10) each position is 10x the last. So, from <b>LSB</b> to <b>MSB</b>, the decimal values of binary positions go: <code>1</code>, <code>2</code>, <code>4</code>, <code>8</code>, <code>16</code>, <code>...</code>.
+					</div>
+				</div>
+				
                 <table class ="table table-bordered" style="width:100%">
                     <tr>
                         <th rowspan="4"><img src="../images/4/sch.3.png"></th>
@@ -306,12 +325,139 @@ latchPin = 22</code></pre>
                         <td>0xFC</td>
                     </tr>
                 </table>
-                <li>Now we have the hexidecimal value of <code>FC</code>, but we'll want to write it as <code>0xFC</code>. The <code>0x</code> makes sure that we don't mistake a hexidecimal value for a decimal value.</li>
+                <li>Now we have the hexidecimal value of <code>FC</code>, but we'll have to write it as <code>0xFC</code>. The <code>0x</code> makes sure that we don't mistake a hexidecimal value for a decimal value.</li>
                 <li>Now, look at your code, at the first value in the array created:</li>
                 <pre><code class="python">segments = [0xFC, 0x60, 0xDA, 0xF2, 0x66, 0xB6, 0x3E, 0xE0, 0xFE, 0xF6]</code></pre>
-                <li>See the <code>0xFC</code>? Looks familar, doesn't it? Try doing the process we just did to find out what the rest of the values will display.</li>
-                <pre><code class="python"></code></pre>
+                <li>See the <code>0xFC</code>? Looks familar, doesn't it? Try doing the process we just did to find out what the rest of the values will display.</li></br>
+				
+				<div class="panel panel-info">
+					<div class="panel-heading">
+						<h3 class="panel-title">Information</h3>
+					</div>
+					<div class="panel-body">
+						Even though these values are written in hexidecimal (or even if you wrote them in decimal), remember that computers only understand binary, any other systems are purely there to make it easy for us puny humans!.
+					</div>
+				</div>
+				
+				<li>Before looking at the code to output this number, we need to understand <i>what</i> we actually have to do:</li>
+				<ol>
+					<li>Get a single bit of the number we want.</li>
+					<li>Turn the GPIO pin connected to the shift register's <code>data</code> pin off if that bit is <code>0</code> or on if it is <code>1</code>. This will tell the shift register what number we want to shift into the registers.</li>
+					<li>Toggle the GPIO pin connected to the shift register's <code>clock</code> pin on and off. This tells the shift register to take the value on the <code>data</code> pin (<code>0</code> or <code>1</code>) and shift it into the register. <b>The shift register will not change the values in the register until this pin is toggled!</b></li>
+					<li>Repeat steps 1, 2, and 3 until all of our bits have been shifted out.</li>
+					<li>Toggle the GPIO pin connected the the shift register's <code>latch</code> pin on and off. This tells the shift register to take the values in the storage register and put them in the output register, to actually output them. This line <i>could</i> be tied to the to the 5v line to always immediately show the bit shifted in, but this means that the wrong output could occur on each pin. In a seven segment display, this may manifest as a flickering. In other, more reactive components could result in... <i>unwanted</i> action.</li>
+				</ol>
+
+
+				<li>We know what we need to do now. So, how do we get a single bit of <code>0xFC</code> at a time? The schematic and bitwise operations! What's a bitwise operations? It is an operation that acts on the actual bits that make up the number in memory. This is low level manipulation of values!</li>
+				
+				<li>Python suppports the following bitwise operations:</li>
+				<table class ="table table-bordered" style="width:100%">
+					<tr>
+						<td colspan="3">Assume the following variable has been declared:</br>
+						<pre><code class="python">i = 0xFC</code></pre>
+						</td>
+					</tr>
+                    <tr>
+                        <td><code>&gt;&gt;</code></td>
+                        <td>Shift bits to the right by the given amount of bits. Puts a <code>0</code> in the newly opened position.</td>
+						<td><code>i &gt;&gt; 1</code><b>:</b> <code>1111 1100</code> becomes <code>0111 1110</code></br>
+						<i>Note:</i> the LSB is lost after the bit shift.</td>
+                    </tr>
+					<tr>
+                        <td><code>&lt;&lt;</code></td>
+                        <td>Similar to <code>&gt;&gt;</code>, but shifts bits to the left instead.</td>
+						<td><code>i &lt;&lt; 1</code><b>:</b> <code>1111 1100</code> becomes <code>1111 1000</code></br>
+						<i>Note:</i> the MSB is lost after the bit shift.</td>
+                    </tr>
+					<tr>
+                        <td><code>&amp;</code></td>
+                        <td>Does a "bitwise AND" where the returned value's binary representation only has <code>1</code>'s where <b>both</b> of the original values had a <code>1</code>.</td>
+						<td><code>i &amp; 7</code><b>:</b> <code>1111 1100</code> is AND'd with <code>0000 0111</code> (decimal: <code>7</code>) to create <code>0000 0100</code>.</td>
+                    </tr>
+					<tr>
+                        <td><code>&verbar;</code></td>
+                        <td>Does a "bitwise OR" where the returned value's binary representation has <code>1</code>'s where <b>either</b> of the original values had a <code>1</code>.</td>
+						<td><code>i &verbar; 7</code><b>:</b> <code>1111 1100</code> is OR'd with <code>0000 0111</code> (decimal: <code>7</code>) to create <code>1111 1111</code>.</td>
+                    </tr>
+					<tr>
+                        <td><code>~</code></td>
+                        <td>Returns the complement of the value, where the binary representation has been flipped: <code>1</code>'s become <code>0</code>'s and <code>0</code>'s become <code>1</code>'s. Also sometimes called NOT.</td>
+						<td><code>~i</code><b>:</b> <code>1111 1100</code> becomes <code>0000 0011</code>.</td>
+                    </tr>
+					<tr>
+                        <td><code>&Hat;</code></td>
+                        <td>Does a "bitwise exclusive OR" otherwise known as an "XOR." It is similar to <code>&verbar;</code>, but returns a <code>0</code> for the given position if <i>both</i> original numbers have a <code>1</code>.</td>
+						<td><code>i &Hat; 7</code><b>:</b> <code>1111 1100</code> is XOR'd with <code>0000 0111</code> (decimal: <code>7</code>) to create <code>1111 1011</code>.</td>
+                    </tr>
+					<tr>
+                        <td>Any of the above operators with <code>=</code></td>
+                        <td>Performs the given operation and assigns the value back to the original variable. Useful for shortening code and making less to type!</td>
+						<td><code>i &gt;&gt;= 1</code> is the same as <code>i = i &gt;&gt; 1</code></td>
+                    </tr>
+                </table>
+				</br>
+				<li>We know the bitwise operations we have available to us and what they do. Now, recall the binary form of <code>0xFC</code>:</li>
+				<table class ="table table-bordered" style="width:100%">
+                    <tr>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                </table>
+				<li>Getting a single bit is fairly easy:</li>
+				<ol>
+					<li>Isolate the wanted bit by <code>AND</code>'ing a mask (a value with a <code>1</code> in the position we want) with the entire number.</li>
+					<li>Shift the number over to the LSB position. We now have the single bit we want.</li>
+					<li>Repeat steps 1 and 2 for each bit desired.</li>
+				</ol>
+				<li>This means we need to use <code>&amp;</code> for step 1 and <code>&gt;&gt;</code> for step 2.</li></br>
+				
+				<li>This next section of code is called a function. Functions are like self contained programs: they'll take the variables given to them (if any), perform a task using them, and return a value (if any). Outside of the function, it can be called and passed values for it to work on. Functions allow a programmer to repeatly perform the same task without having to retype it over and over. <i>In programming, code reuse saves time and causes fewer errors</i>.</li></br>
+				<li>Here's the entire function, which will be broken down into its parts soon:</li>
+                <pre><code class="python">#function for driving the shift register
+#assumes the dataPin and clockPin have already been setup
+#Only does the 8 LSB of output
+def shiftOut(dataPin, clockPin, output, msbFirst):
+	GPIO.output(dataPin, GPIO.LOW)
+	GPIO.output(clockPin, GPIO.LOW)
+
+	mask = 1
+	if(msbFirst):
+		mask <<= 7
+		c = 7;
+		print(output)
+		while c >= 0:
+			GPIO.output(dataPin, ((mask & output) >> c) == 1)
+			GPIO.output(clockPin, GPIO.LOW)
+			time.sleep(0.0001)
+			GPIO.output(clockPin, GPIO.HIGH)
+			time.sleep(0.0001)
+			GPIO.output(clockPin, GPIO.LOW)
+			mask >>= 1
+			c-= 1
+	else:
+		c = 0
+		while c < 8:
+			GPIO.output(dataPin, ((mask & output) >> c) == 1)
+			GPIO.output(clockPin, GPIO.LOW)
+			time.sleep(0.0001)
+			GPIO.output(clockPin, GPIO.HIGH)
+			time.sleep(0.0001)
+			GPIO.output(clockPin, GPIO.LOW)
+			mask <<= 1
+			c+= 1
+	return</code></pre>
                 <li></li>
+                <pre><code class="python"></code></pre>
+				<li></li>
+                <pre><code class="python"></code></pre>
+				<li></li>
                 <pre><code class="python"></code></pre>
             </ul>
         </ol>
