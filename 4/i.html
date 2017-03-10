@@ -349,7 +349,7 @@ latchPin = 22</code></pre>
 				</ol>
 
 
-				<li>We know what we need to do now. So, how do we get a single bit of <code>0xFC</code> at a time? The schematic and bitwise operations! What's a bitwise operations? It is an operation that acts on the actual bits that make up the number in memory. This is low level manipulation of values!</li>
+				<li>We know what we need to do now. So, how do we get a single bit of <code>0xFC</code> at a time? The schematic and bitwise operations! What's a bitwise operation? It is an operation that acts on the actual bits that make up the number in memory. This is low level manipulation of values!</li>
 				
 				<li>Python suppports the following bitwise operations:</li>
 				<table class ="table table-bordered" style="width:100%">
@@ -418,48 +418,149 @@ latchPin = 22</code></pre>
 				</ol>
 				<li>This means we need to use <code>&amp;</code> for step 1 and <code>&gt;&gt;</code> for step 2.</li></br>
 				
+                <li>We understand how to light individual segments of the display, how to store the value that represents those segments, what we need to do to output that value, and what operations we need to do. However, there is one more subject they you need to understand: <a href="https://en.wikipedia.org/wiki/Endianness">endianness</a>.</li>
+                <li>In short, endianness is how to read the bits: forward or backward? We have to read our value from right to left, so that the LSB of our value is first to be shifted out.</li></br>
+                
 				<li>This next section of code is called a function. Functions are like self contained programs: they'll take the variables given to them (if any), perform a task using them, and return a value (if any). Outside of the function, it can be called and passed values for it to work on. Functions allow a programmer to repeatly perform the same task without having to retype it over and over. <i>In programming, code reuse saves time and causes fewer errors</i>.</li></br>
-				<li>Here's the entire function, which will be broken down into its parts soon:</li>
+				<li>Here's the entire function, which will be broken down into the new parts next:</li>
                 <pre><code class="python">#function for driving the shift register
 #assumes the dataPin and clockPin have already been setup
 #Only does the 8 LSB of output
 def shiftOut(dataPin, clockPin, output, msbFirst):
-	GPIO.output(dataPin, GPIO.LOW)
-	GPIO.output(clockPin, GPIO.LOW)
+    GPIO.output(dataPin, GPIO.LOW)
+    GPIO.output(clockPin, GPIO.LOW)
 
-	mask = 1
-	if(msbFirst):
-		mask <<= 7
-		c = 7;
-		print(output)
-		while c >= 0:
-			GPIO.output(dataPin, ((mask & output) >> c) == 1)
-			GPIO.output(clockPin, GPIO.LOW)
-			time.sleep(0.0001)
-			GPIO.output(clockPin, GPIO.HIGH)
-			time.sleep(0.0001)
-			GPIO.output(clockPin, GPIO.LOW)
-			mask >>= 1
-			c-= 1
-	else:
-		c = 0
-		while c < 8:
-			GPIO.output(dataPin, ((mask & output) >> c) == 1)
-			GPIO.output(clockPin, GPIO.LOW)
-			time.sleep(0.0001)
-			GPIO.output(clockPin, GPIO.HIGH)
-			time.sleep(0.0001)
-			GPIO.output(clockPin, GPIO.LOW)
-			mask <<= 1
-			c+= 1
-	return</code></pre>
-                <li></li>
-                <pre><code class="python"></code></pre>
-				<li></li>
-                <pre><code class="python"></code></pre>
-				<li></li>
-                <pre><code class="python"></code></pre>
+    mask = 1
+    if(msbFirst):
+        mask <<= 7
+        c = 7;
+        while c >= 0:
+            GPIO.output(dataPin, ((mask & output) >> c) == 1)
+            toggle(clockPin)
+            mask >>= 1
+            c-= 1
+    else:
+        c = 0
+        while c < 8:
+            GPIO.output(dataPin, ((mask & output) >> c) == 1)
+            toggle(clockPin)
+            mask <<= 1
+            c+= 1
+    return</code></pre>
+                <li>This is the header of the function: </li>
+                <ul>
+                    <li><code>def</code> defines the next section as a function.</li>
+                    <li><code>shiftOut</code> is the name of the function; this is what we use to call this function later.</li>
+                    <li><code>(dataPin, clockPin, output, msbFirst):</code> is the parameter list with 4 different parameters.</li>
+                    <li><code>dataPin</code> and <code>clockPin</code> are the pin numbers for those pins.</li>
+                    <li><code>output</code> is the complete value we want to output.</li>
+                    <li><code>msbFirst</code> is a boolean value (<code>True</code> or <code>False</code>) that says whether we want output from right to left or left to right, bitwise. In this case, this value will be <code>False</code>, but it is nice to write your functions to do things that you may need to do in the future. <i>Remember what I said about code reuse?</i></li>
+                </ul>
+                <pre><code class="python">def shiftOut(dataPin, clockPin, output, msbFirst):</code></pre>
+				<li>This is our mask. We will use it with <code>&amp;</code> to isolate the bit we want. It looks like this in binary:</li>
+                <table class ="table table-bordered" style="width:100%">
+                    <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>1</td>
+                    </tr>
+                </table>
+                <pre><code class="python">mask = 1</code></pre>
+				<li>Since we said that we want to output from left to right (LSB first), msbFirst is false, so we go to the <code>else:</code> section:</li>
+                <pre><code class="python">else:
+    c = 0
+    while c < 8:
+        GPIO.output(dataPin, ((mask & output) >> c) == 1)
+        toggle(clockPin)
+        mask <<= 1
+        c+= 1</code></pre>
+                <li>Next, declare a counter and loop while it is less than <code>8</code></li>
+                <pre><code class="python">c = 0
+    while c < 8:</code></pre>
+                <li>This is the important part of this function. Can you tell what it does?</li>
+                <li>This compount statement does the following in order:</li>
+                <ol>
+                    <li><code>mask & output</code> bitwise <code>AND</code>'s the mask and the output, giving us a binary value with, at most, a single <code>1</code>.</li>
+                    <li><code>>> c</code> takes the result of the above statements and shifts the bits by the counter variable. This is so that our desired bit is always in the LSB position.</li>
+                    <li><code>== 1</code> checks if the result of the above is equal to 1 and returns <code>True</code> if it is. <i>Note:</i> some languages can implicitly convert one type of value to another. This function was <a href="https://github.com/kaiiorg/util/tree/master/raspberry%20pi/kaiiorg.lib">originally one of my own functions </a> that I wrote in C#, so I only changed the syntax until the code worked... I'm not entirely sure if Python requires this and I don't like Python enough to use it for more than I need to. <i>Remember what I said about code reuse?</i></li>
+                    <li><code>GPIO.output(dataPin, ...)</code> takes the results of the above, which by now would either be <code>True</code> or <code>False</code> and turns the pin on if it was <code>True</code> or off if it was <code>False</code></li>
+                </ol>
+                <pre><code class="python">GPIO.output(dataPin, ((mask & output) >> c) == 1)</code></pre>
+                <li>This is a function call to a function that you haven't seen yet (unless you cheated and skipped a head, you cheater!). It turns the pin off and on.</li>
+                <pre><code class="python">toggle(clockPin)</code></pre>
+                <li>This shifts our mask over to the left by 1 place. So, now our mask looks like this:</li>
+                <table class ="table table-bordered" style="width:100%">
+                    <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>0</td>
+                    </tr>
+                </table>
+                <pre><code class="python">mask <<= 1</code></pre>
+                <li>Finally, we add to our counter. If we forgot to do this, we would end up with an infinite loop!</li>
+                <pre><code class="python">c+= 1</code></pre>
+                <li>The section directly under the <code>if:</code> does something similar to the <code>else:</code> section, but it reads from MSB to LSB instead. Read the code and see if you understand it.</li>
+                <li>This is the final line of our function. If there was a value to return, it would follow the return statement. However, we don't need to return anything, so we just need to return to where the function was called from.</li>
+                <pre><code class="python">return</code></pre></br>
+                <li>Next is our second function, which toggles the given pin on and off. The delay is needed just to make sure that the shift register has enough time to recognise the change of voltage on the line.</li>
+                <pre><code class="python">def toggle(pin):
+    GPIO.output(pin, GPIO.LOW)
+    time.sleep(0.0001)
+    GPIO.output(pin, GPIO.HIGH)
+    time.sleep(0.0001)
+    GPIO.output(pin, GPIO.LOW)</code></pre></br></br>
+    
+    
+                <li>Now, we're finally to the main part of the program!</li>
+                <li>After setting up the pins in the manner we want, we go into an infinite loop, into a <code>try... except</code> block to make sure we can break out of that loop, and into the following <code>foreach</code> loop:</li>
+                <pre><code class="python">for segment in segments:
+    shiftOut(dataPin, clockPin, segment, False)
+    toggle(latchPin)
+    time.sleep(0.25)
+    shiftOut(dataPin, clockPin, segment | 1, False)
+    toggle(latchPin)
+    time.sleep(0.25)</code></pre>
+                <li>In this loop, we finally use our function that we just spent previous part of the lab trying to understand. Now that we've written our function, we don't need to understand how it works <i>(until something inevitably goes wrong and it turns out that I've missed a bug in that code...).</i></li>
+                <pre><code class="python">shiftOut(dataPin, clockPin, segment, False)</code></pre>
+                <li>Next, we toggle our latch on and off to tell the shift register to output the value we just shifted to it and we wait a short amount of time before sending out the next value.</li>
+                <pre><code class="python">toggle(latchPin)</code></pre>
+                <li>This is the last part of code that will be discussed in this lab: it does exactly the same as before, but notice that <code>segment</code> is being OR'd with <code>1</code>. Review everything above and figure out what this does to the seven segment display.</li>
+                <pre><code class="python">shiftOut(dataPin, clockPin, segment | 1, False)</code></pre>
             </ul>
+                <div class="panel panel-info">
+					<div class="panel-heading">
+						<h3 class="panel-title">Information</h3>
+					</div>
+					<div class="panel-body">
+						A pro of shift registers is that they expand your input or output capabilities. However, they have two major cons: they require more complex code to use (see this entire lab) and they will slow your code's execution speed (look at all the code used here compared to that used in lab 3. Both are used to turn on or off the same number of LEDs).
+					</div>
+				</div>
+            <li>Now that we finally, <i>finally</i> understand how to use a shift register, try do the following:</li>
+            <ol>
+                <li>See if you actually need to use <code>==</code> in <code>GPIO.output(dataPin, ((mask & output) >> c) == 1)</code></li>
+                <li>Find the hexidecimal values needed to display the following characters to the display: <code>A</code>, <code>B</code>, <code>C</code>, <code>D</code>, <code>E</code>, <code>F</code>.</li>
+                <li>Use the original values given to you and the values you calculated above and show them, one character at a time, on the display.</li>
+            </ol></br>
+            
+            <div class="panel panel-success">
+					<div class="panel-heading">
+						<h3 class="panel-title">Lab Finished!</h3>
+					</div>
+					<div class="panel-body">
+						You've finished this lab! Go make something neat with what you've learned.
+					</div>
+				</div>
+            
         </ol>
         
         <h3>Resources</h3>
@@ -468,8 +569,6 @@ def shiftOut(dataPin, clockPin, output, msbFirst):
             <li><a href="../4/7seg.py">7seg.py</a></li>
         </ol>
       </div>
-      
     </div> <!-- /container -->
-
   </body>
 </html>

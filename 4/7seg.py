@@ -27,37 +27,28 @@ def	shiftOut(dataPin, clockPin, output, msbFirst):
 	if(msbFirst):
 		mask <<= 7
 		c = 7;
-		print(output)
 		while c >= 0:
 			GPIO.output(dataPin, ((mask & output) >> c) == 1)
-			GPIO.output(clockPin, GPIO.LOW)
-			time.sleep(0.0001)
-			GPIO.output(clockPin, GPIO.HIGH)
-			time.sleep(0.0001)
-			GPIO.output(clockPin, GPIO.LOW)
+			toggle(clockPin)
 			mask >>= 1
 			c-= 1
 	else:
 		c = 0
 		while c < 8:
 			GPIO.output(dataPin, ((mask & output) >> c) == 1)
-			GPIO.output(clockPin, GPIO.LOW)
-			time.sleep(0.0001)
-			GPIO.output(clockPin, GPIO.HIGH)
-			time.sleep(0.0001)
-			GPIO.output(clockPin, GPIO.LOW)
+			toggle(clockPin)
 			mask <<= 1
 			c+= 1
 	return
 
-#toggle the latch line
+#toggle the given pin
 #assumes it is already setup
-def latch(latchPin):
-	GPIO.output(latchPin, GPIO.LOW)
+def toggle(pin):
+	GPIO.output(pin, GPIO.LOW)
 	time.sleep(0.0001)
-	GPIO.output(latchPin, GPIO.HIGH)
+	GPIO.output(pin, GPIO.HIGH)
 	time.sleep(0.0001)
-	GPIO.output(latchPin, GPIO.LOW)
+	GPIO.output(pin, GPIO.LOW)
 
 
 
@@ -74,14 +65,14 @@ while True:
 	try:
 		for segment in segments:
 			shiftOut(dataPin, clockPin, segment, False)
-			latch(latchPin)
+			toggle(latchPin)
 			time.sleep(0.25)
 			shiftOut(dataPin, clockPin, segment | 1, False)
-			latch(latchPin)
+			toggle(latchPin)
 			time.sleep(0.25)
 	except KeyboardInterrupt:
 			shiftOut(dataPin, clockPin, 0, False)
-			latch(latchPin)
+			toggle(latchPin)
 			break
 	
 GPIO.cleanup()
