@@ -48,7 +48,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="../index.html">Home</a></li>
+            <li><a href="../index.html">Home</a></li>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
@@ -57,6 +57,14 @@
 
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
+	  
+		<nav aria-label="...">
+			<ul class="pager">
+				<li class = "previous"><a href="../2/i.html">Previous</a></li>
+				<li class = "next"><a href="../4/i.html">Next</a></li>
+			</ul>
+		</nav>
+	  
         <h1>Lab 3: </h1>
         <h2>GPIO Input and Output</h2>
         
@@ -172,7 +180,7 @@
                     <pre><code class="python">GPIO.output(LED0, GPIO.LOW)</code></pre>
                     <li>The next few lines are the first (and last) major structure of the code. It starts a <code>while</code> loop, with the condition of <code>True</code>, meaning it will always loop and not stop. Loops allow a programmer to instruct the computer to execute an arbitrary amount of code for a number of times or until a certain condition occurs. Normally, the <code>while</code> loop will loop until the condition evaluates to <code>False</code>, but since the condition in this loop is <code>True</code>, it wil loop indefinitely! This is useful when you want it to happen, but sometimes an infinite loop occurs due to a programmer's mistake.</li>
                     <li>The next lines are indented with <kbd>tab⇆</kbd> (python requires tabs). This is how python knows the following code is in the loop and not outside. Further indentations are used for nesting of loops or other code structures.</li>
-                    <li>The next line, <code>try:</code> is the start of a <code>try... except</code> (sometimes called a <code>try... catch</code>) block. Inside the <code>try:</code>, code is executed, but if an exception (an error) occurs, the code in the <code>except</code> block is executed. This is how the <code>while True:</code> loop is exited: remember when step 6. had you type <kbd>ctrl</kbd>+<kbd>c</kbd>? This generates a <code>KeyboardInterrupt</code> exception and the code in the <code>except</code> block is then executed. Multiple <code>except</code> blocks can be used to catch and react to multiple exceptions. An <code>except</code> block can also catch spesific exceptions by adding the exception's name to the <code>except</code> declaration, as is done below.</li>
+                    <li>The next line, <code>try:</code> is the start of a <code>try... except</code> (sometimes called a <code>try... catch</code>) block. Inside the <code>try:</code>, code is executed, but if an exception (an error) occurs, the code in the <code>except</code> block is executed. This is how the <code>while True:</code> loop is exited: remember when step 6 had you type <kbd>ctrl</kbd>+<kbd>c</kbd>? This generates a <code>KeyboardInterrupt</code> exception and the code in the <code>except</code> block is then executed. Multiple <code>except</code> blocks can be used to catch and react to multiple exceptions. An <code>except</code> block can also catch spesific exceptions by adding the exception's name to the <code>except</code> declaration, as is done below.</li>
                     <li>The code inside of the <code>try:</code> section of the block is what actually turns the LED on and off. Read the code and see if you've learned from the above information!</li>
                     <li>The last line in this section is <code>break</code>. It is what actually breaks out of the loop; execution returns to outside the loop.</li>
                     <!--The spacing here is broken due to how the <pre> block needs preformated lines. It is annoying. It is easier than using multiple <pre> tags.-->
@@ -211,7 +219,7 @@
 				</div>
 			</div>
             <ul>
-                <li>This line declares and initalizes an array. Arrays are like variables, but they hold more than one value. Think of it as a list of variables all, named one name, but each element accessed individually. The elements in this array can be accessed in various ways, which will be explained when it occurs.</li>
+                <li>This line declares and initalizes an array. Arrays are like variables, but they hold more than one value. Think of it as a list of variables all named one name, but each element accessed individually. The elements in this array can be accessed in various ways, which will be explained when it occurs.</li>
                 <li>The numbers in this array might look familar to you: they are the BCM numbers of <code>LED0</code> to <code>LED7</code></li>
                 <pre><code class="python">LEDs = [13, 12, 19, 6, 5, 25, 24, 23]</code></pre>
                 <li>This is a <code>for</code> loop (sometimes called a <code>foreach</code> loop in other languages). It is one of the ways the elements of the array <code>LEDs</code> are accessed. It takes each element, one at a time, and puts it in a temporary variable called <code>LED</code>, then the code inside can use it. This <code>for</code> loop is allocating all of the pins represented by <code>LEDs</code> and making sure they are turned off.</li>
@@ -254,17 +262,18 @@
                 <li>Turn every other LED on/off.</li>
             </ul>
             <!--GPIO INPUT after here. Maybe move to a seperate lab?-->
-            <li>The previous two examples are useful examples of output. But, what about <i>input</i>? The next example, <code>button.py</code>, will use the tactile buttons, if it wasn't obvious from the name. Download <code>buttons.py</code> from the Resources section or use <code>wget</code> with the same address as last time, but change <code>leds.py</code> to <code>button.py</code>.</li>
+            <li>The previous two examples are useful examples of output. But, what about <i>input</i>? The next example, <code>button.py</code>, will use the tactile buttons, if it wasn't obvious from the name. Download <code>button.py</code> from the Resources section or use <code>wget</code> with the same address as last time, but change <code>leds.py</code> to <code>button.py</code>.</li>
             <li>Run <code>button.py</code> and follow the instructions given by the program. When you're ready for the next section, close the program and open it in <code>nano</code></br>
             Understanding the code: </li>
             <ul>
                 <li>This example is similar to the <code>leds.py</code> example, where the BCM pin numbers are stored in an array, an array called <code>buttons</code>, in this case.</li>
                 <li>The allocation is also similar to the allocation for the LEDs done in <code>leds.py</code>, but the pins are set as <code>GPIO.IN</code> instead of <code>GPIO.OUT</code>. This instructs <code>GPIO</code> to use the pin as an input. Any of the GPIO pins can be used for either <b>I</b>nput or <b>O</b>utput for any <b>G</b>eneral <b>P</b>urpose, be it for powering LEDs, reading input from switches, actuating relays, activating transistors, and much more.</li>
+				<li><b>Warning: </b> The Raspberry PI's GPIO pins are <i>not</i> 5 volt tolerant! Only connect 3.3 volts to these pins!</li>
                 <pre><code class="python">for button in buttons:
     GPIO.setup(button, GPIO.IN)</code></pre>
                 <li>This inner loop is a similar counter-controlled loop as was used in <code>leds.py</code>.</li>
                 <li>The second line shown below is an <code>if</code> statement, which checks if a condition is <code>True</code> and will execute code inside if it is. The <code>if:</code> block can be followed by a <code>else:</code> block (in a similar structure as the <code>try...except</code> block) to execute code if the condition is <code>False</code>. You have already learned about these conditions; they're identical to those used in <code>while</code> loops, but only executed once. This <code>if</code> statement checks to see if the code is not (<code>!=</code>) <code>LOW</code></li>
-                <li>The next line has a compound statement; <code>str.format()</code> is executed before <code>print()</code>. <code>str.format()</code> takes a string and will format it according to a <a href="https://docs.python.org/3.4/library/string.html">set of rules</a>. In this case, it replaces <code>{0}</code> with the first argument in the following arguments, in this case teh variable <code>i</code>. <code>str.format()</code> then returns that formatted string to <code>print()</code>, which will output the given string to the console.</li>
+                <li>The next line has a compound statement; <code>str.format()</code> is executed before <code>print()</code>. <code>str.format()</code> takes a string and will format it according to a <a href="https://docs.python.org/3.4/library/string.html">set of rules</a>. In this case, it replaces <code>{0}</code> with the first argument in the following arguments, which is the variable <code>i</code>. <code>str.format()</code> then returns that formatted string to <code>print()</code>, which will output the given string to the console.</li>
                 <li>Debouncing will be discussed below.</li>
                 <li>The counter variable is incremented by <code>1</code> at the end of the loop and is reset to <code>0</code> before the outter loop (not shown here) runs again.</li>
                 <pre><code class="python">while i < 4
@@ -297,6 +306,13 @@ time.sleep(0.01)</code></pre>
             </div>
         </div>
         
+		<nav aria-label="...">
+			<ul class="pager">
+				<li class = "previous"><a href="../2/i.html">Previous</a></li>
+				<li class = "next"><a href="../4/i.html">Next</a></li>
+			</ul>
+		</nav>
+		
         <h3>Resources</h3>
         Download these files to your Raspberry Pi:
         <ol>

@@ -48,7 +48,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="../index.html">Home</a></li>
+            <li><a href="../index.html">Home</a></li>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
@@ -57,12 +57,20 @@
 
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
+	  
+		<nav aria-label="...">
+			<ul class="pager">
+				<li class = "previous"><a href="../3/i.html">Previous</a></li>
+				<li class = "next disabled"><a hrer="#">Next</a></li>
+			</ul>
+		</nav>
+	  
         <h1>Lab 4: </h1>
         <h2>Using a shift register</h2>
         
         <h3>Information</h3>
         In the last lab, you used the Raspberry Pi's General Purpose Input/Output pins for both input and output. For input, your code checked to see if any of 4 buttons were pressed. For output, your code turned on up to 8 LEDs. Each of these buttons and LEDs are connected to an individual GPIO pin. However, direct connections like this are actually an inefficient method of connecting devices to the Pi. Why? Look at this pin diagram from <a href="https://pinout.xyz">pinout.xyz</a>:
-        <img src="https://pinout.xyz/resources/raspberry-pi-pinout.png">
+        <img src="../images/4/raspberry-pi-pinout.png">
         Some of these pins have special functions that others do not have:
         <ul>
             <li><a href="https://en.wikipedia.org/wiki/Universal_asynchronous_receiver/transmitter">UART</a></li>
@@ -73,7 +81,7 @@
             </ul>
             <li><a href="https://en.wikipedia.org/wiki/I%C2%B2C">I²C</a></li>
             <ul>
-                <li>Inter-Intergrated Circuit, which is supposed to be written as I²C, but is often written as I2C since super scripts are too hard. The abbrivation is actually pronounced as "I-squared-C" so don't call it "I-two-C" if you don't want to be made fun of behind your back! The PI has two I²C channels (0 and 1).</li>
+                <li>Inter-Intergrated Circuit, which is supposed to be written as I²C, but is often written as I2C since super scripts are too hard. The abbrivation is actually pronounced as "I-squared-C" so don't call it "I-two-C" if you don't want to be laughed at. The PI has two I²C channels (0 and 1).</li>
                 <li>BCM 2 is the Serial Data line (SDA) for channel 1</li>
                 <li>BCM 3 is the Serial Clock line (SCL) for channel 1</li>
                 <li>BCM 0 is the Serial Data line (SDA) for channel 0</li>
@@ -208,7 +216,7 @@ latchPin = 22</code></pre>
 						<h3 class="panel-title">Information</h3>
 					</div>
 					<div class="panel-body">
-						The lowest value bit is the one all the way to the right and is thus called the <b>L</b>east <b>S</b>ignificant <b>B</b>it (LSB). The highest value bit is the one all the way to the left and is thus called hte The lowest value bit is the one all the way to the right and is thus called the <b>M</b>ost <b>S</b>ignificant <b>B</b>it (MSB).
+						The lowest value bit is the one all the way to the right and is thus called the <b>L</b>east <b>S</b>ignificant <b>B</b>it (LSB). The highest value bit is the one all the way to the left and is thus called the <b>M</b>ost <b>S</b>ignificant <b>B</b>it (MSB).
 					</div>
 				</div>
 				<div class="panel panel-info">
@@ -335,7 +343,7 @@ latchPin = 22</code></pre>
 						<h3 class="panel-title">Information</h3>
 					</div>
 					<div class="panel-body">
-						Even though these values are written in hexidecimal (or even if you wrote them in decimal), remember that computers only understand binary, any other systems are purely there to make it easy for us puny humans!.
+						Even though these values are written in hexidecimal (or even if you wrote them in decimal), remember that computers only understand binary, any other number system is there to make it easier for us puny humans!.
 					</div>
 				</div>
 				
@@ -491,7 +499,7 @@ def shiftOut(dataPin, clockPin, output, msbFirst):
                     <li><code>GPIO.output(dataPin, ...)</code> takes the results of the above, which by now would either be <code>True</code> or <code>False</code> and turns the pin on if it was <code>True</code> or off if it was <code>False</code></li>
                 </ol>
                 <pre><code class="python">GPIO.output(dataPin, ((mask & output) >> c) == 1)</code></pre>
-                <li>This is a function call to a function that you haven't seen yet (unless you cheated and skipped a head, you cheater!). It turns the pin off and on.</li>
+                <li>This is a function call to a function that you haven't seen yet (unless you cheated and skipped ahead). It turns the pin off and on.</li>
                 <pre><code class="python">toggle(clockPin)</code></pre>
                 <li>This shifts our mask over to the left by 1 place. So, now our mask looks like this:</li>
                 <table class ="table table-bordered" style="width:100%">
@@ -547,7 +555,7 @@ def shiftOut(dataPin, clockPin, output, msbFirst):
 				</div>
             <li>Now that we finally, <i>finally</i> understand how to use a shift register, try do the following:</li>
             <ol>
-                <li>See if you actually need to use <code>==</code> in <code>GPIO.output(dataPin, ((mask & output) >> c) == 1)</code></li>
+                <li>See if you actually need to use <code>== 1</code> in <code>GPIO.output(dataPin, ((mask & output) >> c) == 1)</code></li>
                 <li>Find the hexidecimal values needed to display the following characters to the display: <code>A</code>, <code>B</code>, <code>C</code>, <code>D</code>, <code>E</code>, <code>F</code>.</li>
                 <li>Use the original values given to you and the values you calculated above and show them, one character at a time, on the display.</li>
             </ol></br>
@@ -563,6 +571,13 @@ def shiftOut(dataPin, clockPin, output, msbFirst):
             
         </ol>
         
+		<nav aria-label="...">
+			<ul class="pager">
+				<li class = "previous"><a href="../3/i.html">Previous</a></li>
+				<li class = "next disabled"><a hrer="#">Next</a></li>
+			</ul>
+		</nav>
+		
         <h3>Resources</h3>
         Download these files to your Raspberry Pi:
         <ol>
