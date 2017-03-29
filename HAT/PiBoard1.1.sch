@@ -9859,7 +9859,6 @@ Based on the following sources:
 <pinref part="K1" gate="G$1" pin="5"/>
 <wire x1="33.02" y1="167.64" x2="20.32" y2="167.64" width="0.1524" layer="91"/>
 <label x="20.32" y="167.64" size="1.778" layer="95"/>
-<label x="20.32" y="165.1" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="BCM4" class="0">
@@ -9871,6 +9870,7 @@ Based on the following sources:
 <segment>
 <pinref part="K1" gate="G$1" pin="7"/>
 <wire x1="33.02" y1="165.1" x2="20.32" y2="165.1" width="0.1524" layer="91"/>
+<label x="20.32" y="165.1" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="BCM17" class="0">
