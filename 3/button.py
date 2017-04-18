@@ -29,6 +29,7 @@ while True:
 				time.sleep(0.01)
 			i += 1
 		i = 0
+		time.sleep(0.01)
 	except KeyboardInterrupt:
 		break
 

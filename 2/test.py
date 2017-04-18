@@ -129,7 +129,7 @@ latch(latchPin)
 #Test the buttons
 c = 0
 while c < 4:
-	print("Press button " + str(c) + " (press ctrl+c if it doesn't respond.)")
+	print("Press the HAT's button " + str(c) + " (press ctrl+c if it doesn't respond.)")
 	#Keep checking for a button press
 	try:
 		while GPIO.input(buttons[c]) != GPIO.LOW:
