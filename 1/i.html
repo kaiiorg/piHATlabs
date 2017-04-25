@@ -12,13 +12,13 @@
     <title>Lab 1</title>
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="../styles/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../styles/bootstrap.min.css"> <!--integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"-->
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="../styles/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="../styles/bootstrap-theme.min.css" <!--integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"-->
 
     <!-- Latest compiled and minified JavaScript -->
-    <script src="../js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="../js/bootstrap.min.js"> <!--integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"--></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -214,31 +214,12 @@
                     <h3 class="panel-title">Site configuration is not complete!</h3>
                 </div>
                 <div class="panel-body">
-                    If you can see this, the <code>Rasbian Image</code> link below doesn't actually link to the actual image (click it if you want)!</br>
-					This is because the compressed <code>*.img</code> file is around 1.5GB, which is <a href="https://help.github.com/articles/what-is-my-disk-quota/">larger</a> that what github allows!</br></br>
-					<b>Student:</b> you can't solve this problem. Email your instructor every 30 minutes until they fix this; <b><i>they shouldn't have deployed the labs to students without testing it!</b></i></br></br><!--Sorry!-->
-					<b>Instructor:</b> Fix this by <strike>delegating</strike> doing the following:
-					<ol>
-						<li>Download the <a href="https://www.raspberrypi.org/downloads/raspbian/">Rasbian image</a> you want to use.</li>
-						<li>Upload the Rasbian image to the <code>/1/</code> directory of this site on the server that is hosting it.</li>
-						<li>Download <a href="/1/i.html">the source file for this page</a> from the server that is hosting this site.</li>
-						<li>Open the source page <code>i.html</code> in a text editor</li>
-						<li>At the <b>bottom of the page</b>, add the path to the image in the <code>/i/image.img</code> in the <code>""</code> of the commented out line <code>&lt;a href=""&gt;Rasbian Image&lt;/a&gt;&lt;/li&gt;</code>, where <code>image.img</code> is the name of the image file.</li>
-						<li>Delete the <code>&lt;!--</code> and the <code>--&gt;</code> from the line where you just added the image file path.</li>
-						<li>At the <b>bottom of the page</b>, delete everything between the following two comments. It will delete these instructions, so finish reading them!</li>
-						<ul>
-							<li><code class="HTML">&lt;!--INSTRUCTOR: DELETE EVERYTHING BETWEEN THIS LINE AND THE NEXT COMMENT--&gt;</code></li>
-							<li><code class="HTML">&lt;!--INSTRUCTOR: DELETE EVERYTHING UP TO THE LAST COMMMENT--&gt;</code></li>
-						</ul>
-						<li>Save the changes to <code>i.html</code>, upload it to the host server, replacing the existing <code>i.html</code>.</li>
-					</ol>
+                    <b>Instructor:</b> The current Rasbian Image link goes to the Raspberry PI Foundation's server. It is recommended that the image is downloaded and hosted locally with the rest of these labs to increase download speed. Change the i.html file where this page is hosted to remove this box and to change the link to the new location.
                 </div>
             </div>
-            <li><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Rasbian Image</a></li>
-		<!--INSTRUCTOR: DELETE EVERYTHING UP TO THE LAST COMMMENT-->
-		
-            <!--<li><a href="">Rasbian Image</a></li>-->
-            <li><a href="/1/Win32DiskImagerInstaller.exe">Win32DiskImager Installer</a></li>
+		<!--INSTRUCTOR: DELETE EVERYTHING UP TO THE LAST COMMMENT AND CHANGE THE LINK BELOW-->
+            <li><a href="https://downloads.raspberrypi.org/raspbian_latest">Rasbian Image</a></li>
+            <li><a href="./Win32DiskImagerInstaller.exe">Win32DiskImager Installer</a></li>
         </ol>
       </div>
       
